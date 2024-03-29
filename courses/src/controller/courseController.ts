@@ -245,7 +245,6 @@ export const getCourseById = async (req: Request, res: Response, next: NextFunct
 export const getAllCourses = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Find all courses in the database
-        console.log('Getting all courses')
         const courses = await Course.find({});
         console.log(courses);
         res.status(200).json({ status: true, data: courses });
