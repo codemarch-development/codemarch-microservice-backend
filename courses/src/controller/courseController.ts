@@ -204,7 +204,6 @@ export const updateCourse = async (req: Request, res: Response, next: NextFuncti
 
 export const deleteCourse = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log('hellooo deltee')
         const courseId = req.params.id;
         if(courseId) {
             // Check if the course with the given ID exists
@@ -246,6 +245,7 @@ export const getCourseById = async (req: Request, res: Response, next: NextFunct
 export const getAllCourses = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Find all courses in the database
+        console.log('Getting all courses')
         const courses = await Course.find({});
         console.log(courses);
         res.status(200).json({ status: true, data: courses });
