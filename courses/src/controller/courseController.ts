@@ -204,7 +204,6 @@ export const updateCourse = async (req: Request, res: Response, next: NextFuncti
 
 export const deleteCourse = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log('hellooo deltee')
         const courseId = req.params.id;
         if(courseId) {
             // Check if the course with the given ID exists
