@@ -1,9 +1,7 @@
 import express, { NextFunction, Request, Response } from 'express';
 import { Channel } from 'amqplib';
 import cors from 'cors'
-import dotenv from 'dotenv'
 import session from 'express-session';
-
 import passport from './configs/passport'
 import databaseConnectionAsync from './configs/databaseConfiguration';
 import authRoutes from './routes/authRoutes'
@@ -11,6 +9,7 @@ import userRoutes from './routes/profileRoutes'
 import { NotFoundError } from './errors/not-found-error';
 import { errorHandler } from './middleware/error-handler';
 import { createChannel, subscribeMessage } from './utils';
+import { config } from './configs/envConfiguration';
 
 // Extend the Request interface to include the channel property
 declare global {
@@ -77,7 +76,7 @@ app.use(errorHandler);
 
 const start = async () => {
     try {
-        const DATABASE_URL = 'mongodb://localhost:27017/' as string;
+        const DATABASE_URL = config.DB_URL as string;
         await databaseConnectionAsync(DATABASE_URL);
     } catch (error) {
         console.log(error);

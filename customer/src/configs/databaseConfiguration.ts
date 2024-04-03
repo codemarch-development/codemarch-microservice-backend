@@ -8,7 +8,6 @@ const databaseConnectionAsync = async (databseUrl:string) => {
         await mongoose.connect(databseUrl, DB_OPTIONS);
         console.log('Database connection established')
     } catch (error) {
-        console.log(error)
         throw new DatabaseConnectionError()
     }
 }

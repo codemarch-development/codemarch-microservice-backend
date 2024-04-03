@@ -1,13 +1,5 @@
 version: "3"
 services:
-  nosql-db:
-    image: mvertes/alpine-mongo
-    ports:
-      - "27018:27017"
-    container_name: nosql-db
-    volumes:
-      - ./db/:/data/db
-
   rabbitmq:
     image: rabbitmq:alpine
     container_name: rabbitmq
@@ -23,7 +15,6 @@ services:
       - "8003:8003"
     restart: always
     depends_on:
-      - "nosql-db"
       - "rabbitmq"
     volumes:
       - .:/app
@@ -40,7 +31,6 @@ services:
       - "8002:8002"
     restart: always
     depends_on:
-      - "nosql-db"
       - "rabbitmq"
     volumes:
       - .:/app
@@ -56,13 +46,12 @@ services:
       - "8001:8001"
     restart: always
     depends_on:
-      - "nosql-db"
       - "rabbitmq"
     volumes:
       - .:/app/
       - /app/customer/node_modules
     env_file:
-      - ./customer/.env.dev
+      - ./customer/.env
   nginx-proxy:
     build:
       dockerfile: Dockerfile

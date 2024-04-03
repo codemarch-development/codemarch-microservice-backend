@@ -1,4 +1,4 @@
-import { compare,genSalt,hash,} from 'bcryptjs'
+import { genSalt , hash , compare } from 'bcryptjs'
 import jwt from 'jsonwebtoken';
 import amqplib, { Channel } from 'amqplib';
 import { config } from '../configs/envConfiguration';
@@ -34,7 +34,6 @@ export const pickCodecampsData = (data: any) => {
         description: data.description,
     };
 }
-
 
 // Function to remove the password field from the user data
 export const removePasswordField = (user: UserDocument): Partial<UserDocument> => {
