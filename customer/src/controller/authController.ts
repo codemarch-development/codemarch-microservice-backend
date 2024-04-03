@@ -1,8 +1,6 @@
 import { NextFunction, Request, Response } from "express";
-
 import userModel from '../model/userSchema'
 import Token from '../model/userToken';
-
 import { BadRequestError } from "../errors/bad-request-error";
 import { DatabaseConnectionError } from "../errors/database-connection-error";
 import { generateSalt, generatePasswordHash, generateToken, passwordCompare, removePasswordField } from '../utils';
@@ -13,7 +11,7 @@ import { sendMail } from "../utils/emailSend";
 
 export const signup = async (req: Request, res: Response, next: NextFunction) => {
     try {
-        console.log(req.body);
+        // console.log(req.body);
         const { email, name, password } = req.body;
 
         // Check if user already exists
