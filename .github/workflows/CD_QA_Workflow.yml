@@ -1,0 +1,66 @@
+name: Deploy on QA
+
+on:
+  push:
+    branches: [ "main" ]
+  workflow_dispatch:
+
+jobs:
+  deploy_on_qa:
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Source Code
+      - uses: actions/checkout@v3
+
+      - name: Create customer Env file
+        working-directory: ./customer
+        run: |
+          touch .env
+          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env
+          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env
+          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env
+          echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
+          echo PORT=8001 >> .env
+          cat .env
+
+      - name: Create codecamps Env file
+        working-directory: ./codecamps
+        run: |
+          touch .env
+          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env
+          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env
+          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env
+          echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
+          echo PORT=8003 >> .env
+          cat .env
+          
+      - name: Create courses Env file
+        working-directory: ./courses
+        run: |
+          touch .env
+          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env
+          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env
+          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env
+          echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
+          echo PORT=8002 >> .env
+          cat .env
+         
+      - name: Generate deployment package
+        run: |
+          zip -r deploy.zip . -x '*.git' 
+
+      # - name: Deploy on Elastic beanstalk QA Env
+      #   uses: einaregilsson/beanstalk-deploy@v20
+      #   with:
+      #     aws_access_key: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      #     aws_secret_key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      #     application_name: backend-microservice-cicd
+      #     environment_name: Backend-microservice-cicd-env
+      #     version_label: "ver-${{ github.sha }}"
+      #     region: ap-south-1
+      #     deployment_package: deploy.zip 
+     
+    
+
