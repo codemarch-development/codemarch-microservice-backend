@@ -17,7 +17,7 @@ export async function generatePasswordHash(password: string , salt: string) {
 
 // Utility function to generate a token
 export async function generateToken(id: string,expire:string){
-    return await jwt.sign({ userId: id }, process.env.JWT_KEY as string, { expiresIn: expire });
+    return await jwt.sign({ userId: id }, config.APP_JWT_KEY as string, { expiresIn: expire });
 }
 
 // Utility function to compare password

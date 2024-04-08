@@ -1,6 +1,7 @@
 import { genSalt , hash , compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import amqplib from 'amqplib';
+import { config } from '../configs/envConfiguration';
 
 // Utility function to generate a salt
 export async function generateSalt() {
@@ -14,7 +15,7 @@ export async function generatePasswordHash(password: string, salt: string) {
 
 // Utility function to generate a token
 export async function generateToken(id: string){
-    return await jwt.sign({ userId: id }, process.env.JWT_KEY as string, { expiresIn: '2d' });
+    return await jwt.sign({ userId: id }, config.APP_JWT_KEY as string, { expiresIn: '2d' });
 }
 
 // Utility function to compare password
