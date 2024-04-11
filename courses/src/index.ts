@@ -46,7 +46,7 @@ const start = async () => {
         console.log(error);
     }
 
-    app.listen(8002,()=>{
+    app.listen(config.PORT,()=>{
         console.log('listening on port 8002!');
     })   
 }

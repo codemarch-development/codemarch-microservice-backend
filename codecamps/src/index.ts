@@ -86,7 +86,7 @@ const start = async () => {
         console.log(error);
     }
 
-    app.listen(8003,()=>{
+    app.listen(config.PORT,()=>{
         console.log('listening on port 8003!');
     })   
 }
