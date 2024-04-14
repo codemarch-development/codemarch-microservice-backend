@@ -9,13 +9,13 @@ RUN npm install
 
 COPY . .
 
+# Compile TypeScript files
 RUN npx tsc
-# Make sure your package.json has a "build" script that compiles TypeScript, 
-# typically it looks like: "build": "tsc"
+
 
 EXPOSE 8003
 
-CMD ["node", "dist/index.js"]
+CMD ["node", "./dist/index.js"]
 
 
 
