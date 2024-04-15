@@ -15,7 +15,7 @@ RUN npx tsc
 
 EXPOSE 8003
 
-CMD ["node", "./dist/index.js"]
+CMD ["npm", "start"]
 
 
 
