@@ -34,7 +34,7 @@ jobs:
           echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
           echo PORT=8003 >> .env
           cat .env
-          
+
       - name: Create courses Env file
         working-directory: ./courses
         run: |
@@ -45,10 +45,9 @@ jobs:
           echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
           echo PORT=8002 >> .env
           cat .env
-         
+
       - name: Generate deployment package
-        run: |
-          zip -r deploy.zip . -x '*.git*'
+        run: zip -r deploy.zip . -x '*.git*'
 
       - name: Deploy on Elastic Beanstalk QA Env
         uses: einaregilsson/beanstalk-deploy@v20
