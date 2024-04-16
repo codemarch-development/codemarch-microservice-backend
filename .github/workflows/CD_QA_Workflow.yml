@@ -47,7 +47,7 @@ jobs:
           cat .env.dev
 
       - name: Generate deployment package
-        run: zip -r deploy-$(date +%Y%m%d%H%M%S).zip . -x '*.git*'
+        run: zip -r deploy.zip . -x '*.git*'
 
       - name: Deploy on Elastic Beanstalk QA Env
         uses: einaregilsson/beanstalk-deploy@v20
@@ -58,5 +58,5 @@ jobs:
           environment_name: Codemarch-backend-application-env
           version_label: "ver-${{ github.run_id }}-${{ github.sha }}"
           region: ap-south-1
-          deployment_package: deploy-$(date +%Y%m%d%H%M%S).zip
+          deployment_package: deploy.zip
           use_existing_version_if_available: true
