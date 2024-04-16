@@ -23,6 +23,7 @@ jobs:
           echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
           echo PORT=8001 >> .env
           cat .env
+          npm install
 
       - name: Create codecamps Env file
         working-directory: ./codecamps
@@ -34,6 +35,7 @@ jobs:
           echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
           echo PORT=8003 >> .env
           cat .env
+          npm install
 
       - name: Create courses Env file
         working-directory: ./courses
@@ -45,6 +47,7 @@ jobs:
           echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
           echo PORT=8002 >> .env
           cat .env
+          npm install
 
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
