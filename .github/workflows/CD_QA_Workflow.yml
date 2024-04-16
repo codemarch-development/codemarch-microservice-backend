@@ -16,35 +16,35 @@ jobs:
       - name: Create customer Env file
         working-directory: ./customer
         run: |
-          touch .env.dev
-          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env.dev
-          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env.dev
-          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env.dev
-          echo EXCHANGE_NAME=DATA_EXCHANGE >> .env.dev
-          echo PORT=8001 >> .env.dev
-          cat .env.dev
+          touch .env
+          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env
+          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env
+          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env
+          echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
+          echo PORT=8001 >> .env
+          cat .env
 
       - name: Create codecamps Env file
         working-directory: ./codecamps
         run: |
-          touch .env.dev
-          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env.dev
-          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env.dev
-          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env.dev
-          echo EXCHANGE_NAME=DATA_EXCHANGE >> .env.dev
-          echo PORT=8003 >> .env.dev
-          cat .env.dev
+          touch .env
+          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env
+          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env
+          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env
+          echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
+          echo PORT=8003 >> .env
+          cat .env
 
       - name: Create courses Env file
         working-directory: ./courses
         run: |
-          touch .env.dev
-          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env.dev
-          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env.dev
-          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env.dev
-          echo EXCHANGE_NAME=DATA_EXCHANGE >> .env.dev
-          echo PORT=8002 >> .env.dev
-          cat .env.dev
+          touch .env
+          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env
+          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env
+          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env
+          echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
+          echo PORT=8002 >> .env
+          cat .env
 
       - name: Generate deployment package
         run: zip -r deploy.zip . -x '*.git*'
@@ -59,4 +59,4 @@ jobs:
           version_label: "ver-${{ github.run_id }}-${{ github.sha }}"
           region: ap-south-1
           deployment_package: deploy.zip
-          use_existing_version_if_available: true
+          # use_existing_version_if_available: true
