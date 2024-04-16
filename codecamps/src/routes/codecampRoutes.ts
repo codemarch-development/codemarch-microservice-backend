@@ -1,6 +1,6 @@
 import express from 'express';;
 import authenticateUser from '../middleware/authenticateUser';
-import { createCodeCamp, deleteCodeCamps, getAllCodeCamps, getCodeCampById, updateCourseSyllabus, updateCreation, uploadCodecampContent, uploadCodecampSyllabus } from '../controller/codeCampController'
+import { CICDTest, createCodeCamp, deleteCodeCamps, getAllCodeCamps, getCodeCampById, updateCourseSyllabus, updateCreation, uploadCodecampContent, uploadCodecampSyllabus } from '../controller/codeCampController'
 import { markOrUnmarkCompletion, userCodeCampEnrollment } from '../controller/userCodecampController';
 
 
@@ -47,6 +47,9 @@ router.delete('/:id', deleteCodeCamps);
 router.post('/enroll',authenticateUser,userCodeCampEnrollment);
 
 // Mark or Unmark code camp completion by a user
+
+
+router.get('/test', CICDTest);
 
 
 export default router ;
