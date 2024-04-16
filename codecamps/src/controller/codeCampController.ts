@@ -232,12 +232,15 @@ export const getAllCodeCamps = async (req: Request, res: Response, next: NextFun
 
 
 
-export const CICDTest = async (req: Request, res: Response, next: NextFunction) => {
+export const getTestConfirmation = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Find all courses in the database
-        const message = 'cicd setup is okay '
-        res.status(200).json({ status: true, message });
-    } catch (error) {
-        next(error);
+        console.log('hello')
+        // const codeCamps = await CodeCamps.find({});
+        // res.status(200).json({ status: true, data: codeCamps});
+    } catch (error:any) {
+        // next(error);
+        res.status(200).json({ status: true, data: error.message });
+
     }
 }

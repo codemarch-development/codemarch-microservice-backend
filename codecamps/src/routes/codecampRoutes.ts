@@ -1,6 +1,6 @@
 import express from 'express';;
 import authenticateUser from '../middleware/authenticateUser';
-import { CICDTest, createCodeCamp, deleteCodeCamps, getAllCodeCamps, getCodeCampById, updateCourseSyllabus, updateCreation, uploadCodecampContent, uploadCodecampSyllabus } from '../controller/codeCampController'
+import { getTestConfirmation, createCodeCamp, deleteCodeCamps, getAllCodeCamps, getCodeCampById, updateCourseSyllabus, updateCreation, uploadCodecampContent, uploadCodecampSyllabus } from '../controller/codeCampController'
 import { markOrUnmarkCompletion, userCodeCampEnrollment } from '../controller/userCodecampController';
 
 
@@ -31,25 +31,23 @@ router.patch('/update-syllabus/:id', updateCourseSyllabus);
 router.get('/', getAllCodeCamps);
 
 // Get a specific code camp by ID
-router.get('/:id', getCodeCampById);
 
 // // Update a code camp by ID
 // router.patch('/:id', updateCodeCamps);
 
+router.get('/anshid',getTestConfirmation)
 // User Codecamps
 // router.get('/user/codecamps',authenticateUser,myCodecamps);
 
 // Delete a code camp by ID
 router.delete('/:id', deleteCodeCamps);
 
+router.get('/:id', getCodeCampById);
 
 // Enroll a code camp by a user
-router.post('/enroll',authenticateUser,userCodeCampEnrollment);
+router.post('/enroll',userCodeCampEnrollment);
 
 // Mark or Unmark code camp completion by a user
-
-
-router.get('/test', CICDTest);
 
 
 export default router ;
