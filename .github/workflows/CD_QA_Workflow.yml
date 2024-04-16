@@ -17,9 +17,9 @@ jobs:
         working-directory: ./customer
         run: |
           touch .env
-          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env
-          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env
-          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env
+          echo APP_JWT_KEY='jwtauth1010' >> .env
+          echo MONGODB_URL='mongodb+srv://codemarch123:kv3uYxdoofx6V1gx@codemarchcluster.kau3kfa.mongodb.net/?retryWrites=true&w=majority&appName=CodemarchCluster' >> .env
+          echo MESSAGE_BROKER_URL='amqps://cwqhyalh:OZ8ZPEiQPBZbthqfnkrMzSIewiUGllnj@lionfish.rmq.cloudamqp.com/cwqhyalh' >> .env
           echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
           echo PORT=8001 >> .env
           cat .env
@@ -28,9 +28,9 @@ jobs:
         working-directory: ./codecamps
         run: |
           touch .env
-          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env
-          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env
-          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env
+          echo APP_JWT_KEY='jwtauth1010' >> .env
+          echo MONGODB_URL='mongodb+srv://codemarch123:kv3uYxdoofx6V1gx@codemarchcluster.kau3kfa.mongodb.net/?retryWrites=true&w=majority&appName=CodemarchCluster' >> .env
+          echo MESSAGE_BROKER_URL='amqps://cwqhyalh:OZ8ZPEiQPBZbthqfnkrMzSIewiUGllnj@lionfish.rmq.cloudamqp.com/cwqhyalh' >> .env
           echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
           echo PORT=8003 >> .env
           cat .env
@@ -39,9 +39,9 @@ jobs:
         working-directory: ./courses
         run: |
           touch .env
-          echo APP_JWT_KEY=${{ secrets.QA_APP_SECRET }} >> .env
-          echo MONGODB_URL=${{ secrets.QA_DB_URL }} >> .env
-          echo MESSAGE_BROKER_URL=${{ secrets.QA_MSG_QUEUE_URL }} >> .env
+          echo APP_JWT_KEY='jwtauth1010' >> .env
+          echo MONGODB_URL='mongodb+srv://codemarch123:kv3uYxdoofx6V1gx@codemarchcluster.kau3kfa.mongodb.net/?retryWrites=true&w=majority&appName=CodemarchCluster' >> .env
+          echo MESSAGE_BROKER_URL='amqps://cwqhyalh:OZ8ZPEiQPBZbthqfnkrMzSIewiUGllnj@lionfish.rmq.cloudamqp.com/cwqhyalh' >> .env
           echo EXCHANGE_NAME=DATA_EXCHANGE >> .env
           echo PORT=8002 >> .env
           cat .env
