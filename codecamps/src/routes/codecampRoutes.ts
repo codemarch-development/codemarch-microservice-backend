@@ -45,7 +45,7 @@ router.delete('/:id', deleteCodeCamps);
 router.get('/:id', getCodeCampById);
 
 // Enroll a code camp by a user
-router.post('/enroll',userCodeCampEnrollment);
+router.post('/enroll',authenticateUser,userCodeCampEnrollment);
 
 // Mark or Unmark code camp completion by a user
 
