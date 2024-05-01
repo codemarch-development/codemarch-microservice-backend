@@ -16,6 +16,7 @@ export const userCodeCampEnrollment = async (req: Request, res: Response, next: 
         const { rabbitMQChannel } : any = global
         const { codecampId } = req.body;
         
+        console.log(userId,codecampId)
         // Check if both user ID and course ID are provided
         if (!userId || !codecampId) {
             throw new BadRequestError('Invalid credentials');
