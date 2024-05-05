@@ -27,13 +27,12 @@ interface ICodeBlock extends Document {
 
 interface ICodecampData extends Document {
   title: string;
-  description: string;
+  description :object;
   videoUrl?: string;
   videoThumbnail?: object;
   section: string;
+  type: string;
   videoPlayer: string;
-  image?:object;
-  codeBlock?: ICodeBlock[];
   links:ILink[];
   suggestion: string;
   questions: IComment[];
@@ -92,21 +91,18 @@ const syllabusItemSchema = new Schema<ISyllabusItem>({
   },
 });
 
-// const codecampDataSchema = new Schema<ICodecampData>({
-//   videoUrl: String,
-//   videoThumbnail: Object,
-//   title: String,
-//   section: String,
-//   description:String,
-//   videoPlayer: String,
-//   links:[LinkSchema],
-//   image:Object,
-//   codeBlock:[{
-//     type: String,
-//   }],
-//   suggestion: String,
-//   questions: [commentSchema]
-// })
+const codecampDataSchema = new Schema<ICodecampData>({
+  videoUrl: String,
+  videoThumbnail: Object,
+  title: String,
+  section: String,
+  description:Object,
+  type: String,
+  videoPlayer: String,
+  links:[LinkSchema],
+  suggestion: String,
+  questions: [commentSchema]
+})
   
 
 
@@ -152,7 +148,7 @@ const codecampSchema = new Schema<ICodecamp>({
     },
     syllabus:[syllabusItemSchema]
   }],
-  codecampData:[{}],
+  codecampData:[codecampDataSchema],
   ratings:{
     type: Number,
     default: 0
