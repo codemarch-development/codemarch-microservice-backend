@@ -116,6 +116,7 @@ export const markOrUnmarkCompletion = async (req: Request, res: Response, next: 
     try {
         const userId = req?.user;
         const { contentId,codecampId,length } = req?.body;
+        console.log( contentId,codecampId,length,userId)
         console.log('hellpppppp')
 
         // Check if both user ID and code camp ID are provided

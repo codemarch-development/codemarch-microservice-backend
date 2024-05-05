@@ -43,7 +43,6 @@ export const CreateChannel = async (): Promise<Channel> => {
         const connection = await amqplib.connect(config.MESSAGE_BROKER_URL as string);
         const channel = await connection.createChannel();
         await channel.assertExchange(config.EXCHANGE_NAME, 'direct', { durable: false });
-        console.log('channel created', channel)
         return channel;
   
     } catch (err) {

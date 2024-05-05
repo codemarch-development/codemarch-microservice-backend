@@ -56,7 +56,6 @@ let channel: Channel | null = null;
         // You can also store it in a global variable or dependency injection container
         // For simplicity, let's store it as a global variable
         (global as any).rabbitMQChannel = channel;
-        console.log('Channel createddddd');
 
         // Start your server or other application logic here
     } catch (error) {
