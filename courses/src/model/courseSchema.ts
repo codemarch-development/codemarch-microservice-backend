@@ -32,9 +32,8 @@ interface ICourseData extends Document {
   videoUrl?: string;
   videoThumbnail?: object;
   section: string;
+  type: string;
   videoPlayer: string;
-  image?:object;
-  codeBlock?: ICodeBlock[];
   links:ILink[];
   suggestion: string;
   questions: IComment[];
@@ -54,6 +53,7 @@ interface ICourse extends Document {
   estimatedPrice: number;
   thumbnail: Object;
   tags: string;
+  isPreview:boolean;
   reviews: IReview[];
   syllabusOverview:{title:string, description:string , syllabus:ISyllabusItem[]}[],
   courseData: ICourseData[];
@@ -101,13 +101,10 @@ const courseDataSchema = new Schema<ICourseData>({
   videoThumbnail: Object,
   title: String,
   section: String,
-  description:String,
+  description:Object,
+  type: String,
   videoPlayer: String,
   links:[LinkSchema],
-  image:Object,
-  codeBlock:[{
-    type: String,
-  }],
   suggestion: String,
   questions: [commentSchema]
 })
@@ -142,6 +139,9 @@ const courseSchema = new Schema<ICourse>({
   }],
   tags:{
     type: String,
+  },
+  isPreview :{
+    type:Boolean
   },
   reviews:[reviewSchema],
   syllabusOverview:[{

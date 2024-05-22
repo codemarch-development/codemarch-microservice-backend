@@ -58,7 +58,7 @@ export const signin = async (req: Request, res: Response, next: NextFunction) =>
         }
         
         // Check if the provided password matches the one in the database
-        const isMatched = await passwordCompare(password, existingUser.password)
+        const isMatched = await passwordCompare(password, existingUser.password as string);
         
         if(!isMatched ) {
             throw next(new BadRequestError('Incorrect credentials'));

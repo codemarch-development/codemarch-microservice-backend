@@ -27,21 +27,18 @@ interface ICodeBlock extends Document {
 
 interface ICodecampData extends Document {
   title: string;
-  description :object;
+  document:object;
   videoUrl?: string;
   videoThumbnail?: object;
   section: string;
   type: string;
+  isPreview?: string;
   videoPlayer: string;
   links:ILink[];
   suggestion: string;
   questions: IComment[];
 }
 
-interface ISyllabusItem extends Document {
-  title:string;
-  description:string;
-}
 
 interface ICodecamp extends Document {
   title:string;
@@ -49,12 +46,12 @@ interface ICodecamp extends Document {
   price: number;
   about: string;
   benefits:{}[] ;
-  estimatedPrice: number;
+  estimated_price: number;
   thumbnail: Object;
   tags: string;
   reviews: IReview[];
-  syllabusOverview:{title:string, description:string , syllabus:ISyllabusItem[]}[],
-  codecampData: ICodecampData[];
+  codecamp_data: ICodecampData[];
+  codecamp_type: string;
   ratings?: number;
   purchased?: number;
   status?: string;
@@ -80,24 +77,15 @@ const commentSchema = new Schema<IComment>({
   commentReplies: [Object]
 })
 
-const syllabusItemSchema = new Schema<ISyllabusItem>({
-  title: {
-    type: String,
-    required: true,
-  },
-  description: {
-    type: String,
-    required: true,
-  },
-});
 
 const codecampDataSchema = new Schema<ICodecampData>({
   videoUrl: String,
   videoThumbnail: Object,
   title: String,
   section: String,
-  description:Object,
+  document:Object,
   type: String,
+  isPreview: String,
   videoPlayer: String,
   links:[LinkSchema],
   suggestion: String,
@@ -124,7 +112,7 @@ const codecampSchema = new Schema<ICodecamp>({
     type: Number,
     default:0
   },
-  estimatedPrice: {
+  estimated_price: {
     type: Number,
   },
   thumbnail: {
@@ -135,20 +123,9 @@ const codecampSchema = new Schema<ICodecamp>({
     type:String,
     required:true
   }],
-  tags:{
-    type: String,
-  },
+
   reviews:[reviewSchema],
-  syllabusOverview:[{
-    title:{
-      type:String
-    },
-    description:{
-      type:String
-    },
-    syllabus:[syllabusItemSchema]
-  }],
-  codecampData:[codecampDataSchema],
+  codecamp_data:[codecampDataSchema],
   ratings:{
     type: Number,
     default: 0
@@ -156,6 +133,11 @@ const codecampSchema = new Schema<ICodecamp>({
   purchased: {
     type: Number,
     default: 0
+  },
+  codecamp_type: {
+    type: String,
+    enum: ['free', 'subscription', 'paid'],
+    default: 'free' // You can set a default value if needed
   },
   status: {
     type:String,

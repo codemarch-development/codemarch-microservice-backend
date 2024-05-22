@@ -1,6 +1,7 @@
 import { NextFunction, Request, Response } from "express";
 
 import userModel from '../model/userSchema';
+import userCodecampsModel from "../model/userCodecampsSchema";
 import { BadRequestError } from "../errors/bad-request-error";
 import { UserProfile } from "../Types/types";
 import { passwordCompare, pickCodecampsData, removePasswordField } from "../utils";
@@ -36,7 +37,6 @@ export const getUser = async (req: Request, res: Response, next: NextFunction ) 
         // res.status(500).json({ status: false, message: 'Internal server error' });
     }
 };
-
 
 
 export const editUser = async (req: Request, res: Response, next: NextFunction) => {
@@ -78,6 +78,60 @@ export const editUser = async (req: Request, res: Response, next: NextFunction) 
     }
 };
 
+export const getUserCodecampById = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = req?.user as string ;
+        const codecampId = req.params.id;
+
+        console.log(codecampId,'codecampId',userId)
+
+        if (!userId || !codecampId) {
+            throw next(new BadRequestError('Invalid credentials'));
+        }
+        
+        const codecamp = await userCodecampsModel.findOne({ userId, codecampId });
+        console.log(codecamp,'user codecamp');
+
+        res.status(200).json({
+            status: true,
+            data: codecamp,
+            message: 'Success',
+        });
+
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+} 
+
+export const getUserAllCodecamps = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const userId = req?.user as string ;
+
+        if (!userId) {
+            throw next(new BadRequestError('Invalid credentials'));
+        }
+
+
+        const codecamps = await userCodecampsModel.find({userId});
+        console.log(codecamps,'anshyyyyyyyyy')
+
+        if (!codecamps) {
+            throw next(new BadRequestError('User didnt have any codecamps'));
+        }
+
+        res.status(200).json({
+            status: true,
+            data: codecamps,
+            message: 'Success',
+        });
+
+
+    } catch (error) {
+        console.log(error);
+        next(error);
+    }
+}
 
 export const terminateAccount = async (req: Request, res: Response, next: NextFunction) => {
     try {
@@ -96,7 +150,7 @@ export const terminateAccount = async (req: Request, res: Response, next: NextFu
             throw next(new BadRequestError('Password confirmation is required'));
         }
         
-        const isPasswordValid = await passwordCompare(password, user.password);
+        const isPasswordValid = await passwordCompare(password, user.password as any);
         console.log(isPasswordValid);
         if (!isPasswordValid) {
             throw next(new BadRequestError('Invalid password confirmation'));
@@ -115,29 +169,25 @@ export const terminateAccount = async (req: Request, res: Response, next: NextFu
 export const markOrUnmarkCompletion = async (req: Request, res: Response, next: NextFunction) => {
     try {
         const userId = req?.user;
-        const { contentId,codecampId,length } = req?.body;
-        console.log( contentId,codecampId,length,userId)
-        console.log('hellpppppp')
+        const { contentId, codecampId, length } = req?.body;
 
-        // Check if both user ID and code camp ID are provided
         if (!userId || !codecampId || !contentId) {
             throw new BadRequestError('Invalid credentials');
         }
 
         const user = await userModel.findById(userId);
         if (!user) {
-            throw new BadRequestError('user not found');
+            throw new BadRequestError('User not found');
         }
 
-        // Check if the codecampId exists in the user's codecamps array
-        const codecamp = user?.codecamps.find(camp => camp.codecampId === codecampId);
+        const codecamp = await userCodecampsModel.findOne({ userId, codecampId });
         if (!codecamp) {
-            // Codecamp not found in user's codecamps array
             throw new BadRequestError('Codecamp not found in user codecamps');
         }
 
+        let completedContents = [...codecamp.completedContents]; // Clone the array
+
         // Check if the contentId exists in the completedContents array of the codecamp
-        const completedContents = codecamp?.completedContent || [];
         const index = completedContents.indexOf(contentId);
         if (index !== -1) {
             // ContentId exists, remove it from the array
@@ -147,53 +197,81 @@ export const markOrUnmarkCompletion = async (req: Request, res: Response, next: 
             completedContents.push(contentId);
         }
 
+        const codeCampProgress = (completedContents.length / length) * 100;
 
-        // const totalContents = codecamp?.codecampData?.length || 0;
-        const codeCampProgress = (completedContents.length / length ) * 100;
+        // Update the document with the modified fields
+        const userCodecamp = await userCodecampsModel.findByIdAndUpdate(
+            codecamp._id,
+            { completedContents, codeCampProgress },
+            { new: true } // Return the updated document
+        );
 
-        codecamp.completedContent = completedContents;
-        codecamp.progress = codeCampProgress;
-        const userData = await user.save();
-
-        // // Update the completedContents array of the codecamp
-        res.status(200).json({ status: true,user:userData, message: 'success' });
+        res.status(200).json({ status: true, user: userCodecamp, message: 'Success' });
+        
         
     } catch (error) {
         next(error);
     }
 }
 
-const addToCodecampsList = async (userId:string,data:any) => {
+const userCodecampsList = async ( userId:string, data:any ) => {
     try {
-        // console.log(userId,data);
-        // console.log('anshyyy evade kitty daaaa')
+
         if (!data || !userId) {
             return new BadRequestError('Invalid credentials');
         }
 
         // Use the utility function to pick only the required fields
-        const codecampsData = pickCodecampsData(data);
+        const { codecampId, title, description, thumbnail } = pickCodecampsData(data);
 
-        const existingUser = await userModel.findOne({
-            _id: userId,
-            'codecamps.codecampId': codecampsData.codecampId
+        const codecampExists = await userCodecampsModel.findOne({
+            userId: userId,
+            codecampId,
         });
 
-        if(existingUser){
+        console.log(codecampExists,'checking codecamps exists');
+
+        if(codecampExists){
             return new BadRequestError('Already enrolled');
         }
 
-        // Find the user by ID and update
-        const updatedUser = await userModel.findByIdAndUpdate(
+        const newUserCodecamp = new userCodecampsModel({
             userId,
-            { $push: { codecamps: codecampsData } }, // Pushes the new codecamp data into the codecamps array
-            { new: true } // Returns the modified document rather than the original
-        );
-        if (!updatedUser) {
-            return new BadRequestError('User not found');
+            codecampId,
+            title,
+            description,
+            thumbnail
+        });
+
+        const savedCamp = await newUserCodecamp.save();
+        console.log(savedCamp);
+
+        return({status:true, message: 'User enrolled the codecamp' });
+
+    } catch (error) {
+        throw(error);
+    }
+}
+
+
+const updateUsersCodecamp = async (data:any) => {
+    try {
+        console.log('data', data);
+        if (!data) {
+            return new BadRequestError('Invalid credentials');
         }
 
-        return({status:true, message: 'User enrolled the Code camp' });
+        const { codecampId, title, description, thumbnail } = pickCodecampsData(data);
+
+        // Update documents that match the specified codecampId
+        const result = await userCodecampsModel.updateMany(
+            { codecampId: codecampId },
+            { $set: { title, description, thumbnail } }
+        );
+
+        console.log(result);
+
+
     } catch (error) {
         throw(error);
     }
@@ -201,28 +279,25 @@ const addToCodecampsList = async (userId:string,data:any) => {
 
 
 
-
 export const SubscribeEvents = (payload:any) => {
      
-    const { event, data,userId } = JSON.parse(payload) ;
-    console.log(event,'----')
-    // const { userId, product, order, qty } = data;
-    // console.log('orderrrrr',order)
+    const { event, data, userId } = JSON.parse(payload) ;
     try {
         switch(event){
             case 'CODECAMP_ENROLLED':
-            // case 'REMOVE_FROM_WISHLIST':
-                console.log('set ayeda mowne')
-                
-                addToCodecampsList(userId,data)
+                userCodecampsList(userId,data)
                 break;
-             
+
+            case 'CODECAMP_UPDATED':
+                console.log('codecamp updated cheyy')
+                updateUsersCodecamp(data)
+                break;
             default:
                 break;
         }
         
     } catch (error) {
-        
+        throw(error)
     }
 
 }

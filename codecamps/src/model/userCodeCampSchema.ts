@@ -12,11 +12,14 @@ const userCodeCampSchema : Schema = new Schema ({
         required: true,
     },
 
+ 
+
     completedContents: [
         {
           type: String,
         },
     ],
+
     codeCampProgress: {
         type: Number,
         default: 0, // Initially, no progress

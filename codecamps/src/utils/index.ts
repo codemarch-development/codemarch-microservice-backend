@@ -1,7 +1,10 @@
 import { config } from '../configs/envConfiguration'
 import { genSalt , hash , compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
-import amqplib,{ Channel } from 'amqplib';
+import { connect, Connection, Channel } from 'amqplib';
+import { serveRPCRequests } from '../controller/codeCampController';
+
+let amqplibConnection: Connection | null = null;
 
 // Utility function to generate a salt
 export async function generateSalt() {
@@ -23,25 +26,33 @@ export async function passwordCompare(  password:string, existingPassword:string
     return await compare( password, existingPassword);
 }
 
-export const getPayload = (data:any,event:string,userId:Object) => {
+export const getPayload = (data: any, event: string, userId: object = {}) => {
     const payload = {
         event: event,
-        userId:userId,
+        userId: userId,
         data: data,
     }
-
     return payload;
-
 }
 
+
 //=================================== Message Brocker Implementation ===================================//
+
+const getChannel = async (): Promise<Channel> => {
+    if (amqplibConnection === null) {
+        amqplibConnection = await connect(config.MESSAGE_BROKER_URL as string);
+    }
+
+    const channel = await amqplibConnection.createChannel();
+    return channel;
+};
 
 //Create Channel
 export const CreateChannel = async (): Promise<Channel> => {
     try {
       
-        const connection = await amqplib.connect(config.MESSAGE_BROKER_URL as string);
-        const channel = await connection.createChannel();
+        // const connection = await amqplib.connect(config.MESSAGE_BROKER_URL as string);
+        const channel = await getChannel();
         await channel.assertExchange(config.EXCHANGE_NAME, 'direct', { durable: false });
         return channel;
   
@@ -59,21 +70,36 @@ export const PublishMessage = async (channel:Channel, binding_key:string, messag
         throw err
     }
 }
-  
-  
-//Subscribe Message
-export const subscribeMessage = async (channel: Channel, service: any, bindingKey: string): Promise<void> => {
-    const appQueue = await channel.assertQueue(config.QUEUE_NAME);
-    await channel.bindQueue(appQueue.queue, config.EXCHANGE_NAME, bindingKey);
-  
-    channel.consume(appQueue.queue, (data) => {
-        if (data) { // Check if data is not null
-            console.log('Received data:');
-            console.log(data.content.toString());
-            channel.ack(data);
-        } else {
-            // Handle the case when data is null
-            console.log('No message received, or message was null.');
-        }
+
+
+//RPC Observer 
+export const RPCObserver = async (RPC_QUEUE_NAME:string) => {
+    const channel = await getChannel();
+    await channel.assertQueue(RPC_QUEUE_NAME,{
+        durable: false,
     });
+
+    channel.prefetch(1)
+    channel.consume(RPC_QUEUE_NAME, async (msg:any)=> {
+        if(msg.content) {
+            //DB operations
+            const payload = JSON.parse(msg.content.toString());
+            const response = serveRPCRequests(payload) //call DB operation
+
+            channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(response)),
+                {
+                    correlationId: msg.properties.correlationId,
+                }
+            );
+
+            channel.ack(msg);
+        }
+    },
+
+    {
+        noAck: false,
+    })
+
 }
+
+
