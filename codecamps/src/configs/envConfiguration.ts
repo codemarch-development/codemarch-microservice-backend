@@ -7,7 +7,7 @@ if (process.env.NODE_ENV === "prod") {
     dotEnv.config({
         path:'./.env.dev',
     });
-    console.log('Loaded developer environment config from .env')
+    console.log('Loaded developer environment config from .env.dev')
 }
 
 export const config = {

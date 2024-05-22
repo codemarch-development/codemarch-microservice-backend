@@ -5,7 +5,7 @@ import { Channel } from 'amqplib';
 import passport from './configs/passport';
 import databaseConnectionAsync from './configs/databaseConfiguration';
 import codeCampsRoutes from './routes/codecampRoutes';
-import { CreateChannel } from './utils/index'
+import { CreateChannel, RPCObserver } from './utils/index'
 import { config } from './configs/envConfiguration'
 import { NotFoundError } from './errors/not-found-error';
 import { errorHandler } from './middleware/error-handler';
@@ -36,21 +36,12 @@ app.use(passport.initialize());
 
 let channel: Channel | null = null;
 
-// Middleware to attach the channel object to the request
-// app.use(async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         const channel = await CreateChannel();
-//         req.rabbitMQChannel = channel;
-//         next();
-//     } catch (error) {
-//         console.error('Error creating channel:', error);
-//         next(error);
-//     }
-// });
-
 (async () => {
     try {
-        const channel = await CreateChannel();
+        const [channel, _] = await Promise.all([
+            CreateChannel(),
+            RPCObserver('CODECAMP_RPC')
+        ]);
         // Pass the channel to other parts of your application
         // For example, you can pass it to route handlers or services
         // You can also store it in a global variable or dependency injection container
@@ -59,8 +50,8 @@ let channel: Channel | null = null;
 
         // Start your server or other application logic here
     } catch (error) {
+        console.log('Error connecting to RabbitMQ:', error);
         throw error
-        console.error('Error connecting to RabbitMQ:', error);
     }
 })();
 
@@ -76,7 +67,8 @@ app.all('*', (_req, _res, next) => {
 
 // Register the error handler middleware
 app.use(errorHandler);
-console.log(config.DB_URL)
+
+
 const start = async () => {
     try {
         const DATABASE_URL = config.DB_URL as string;
