@@ -5,7 +5,7 @@ import { Channel } from 'amqplib';
 import passport from './configs/passport';
 import databaseConnectionAsync from './configs/databaseConfiguration';
 import codeCampsRoutes from './routes/codecampRoutes';
-import { CreateChannel } from './utils/index'
+import { CreateChannel, RPCObserver } from './utils/index'
 import { config } from './configs/envConfiguration'
 import { NotFoundError } from './errors/not-found-error';
 import { errorHandler } from './middleware/error-handler';
@@ -33,7 +33,6 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
-
 
 (async () => {
     try {
