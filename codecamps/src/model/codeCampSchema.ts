@@ -51,7 +51,7 @@ interface ICodecamp extends Document {
   tags: string;
   reviews: IReview[];
   codecamp_data: ICodecampData[];
-  codecamp_type: string;
+  category: string;
   ratings?: number;
   purchased?: number;
   status?: string;
@@ -134,7 +134,7 @@ const codecampSchema = new Schema<ICodecamp>({
     type: Number,
     default: 0
   },
-  codecamp_type: {
+  category: {
     type: String,
     enum: ['free', 'subscription', 'paid'],
     default: 'free' // You can set a default value if needed

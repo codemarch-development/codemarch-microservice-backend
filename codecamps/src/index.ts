@@ -5,7 +5,7 @@ import { Channel } from 'amqplib';
 import passport from './configs/passport';
 import databaseConnectionAsync from './configs/databaseConfiguration';
 import codeCampsRoutes from './routes/codecampRoutes';
-import { CreateChannel, RPCObserver } from './utils/index'
+import { CreateChannel } from './utils/index'
 import { config } from './configs/envConfiguration'
 import { NotFoundError } from './errors/not-found-error';
 import { errorHandler } from './middleware/error-handler';
@@ -34,14 +34,10 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
 
-let channel: Channel | null = null;
 
 (async () => {
     try {
-        const [channel, _] = await Promise.all([
-            CreateChannel(),
-            RPCObserver('CODECAMP_RPC')
-        ]);
+        const channel:Channel = await CreateChannel();
         // Pass the channel to other parts of your application
         // For example, you can pass it to route handlers or services
         // You can also store it in a global variable or dependency injection container
