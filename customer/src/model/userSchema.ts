@@ -17,6 +17,7 @@ interface User {
   bio?: string;
   socialMediaLinks?: SocialMediaLinks;
   isVerified?: boolean;
+  isBlocked?: boolean;
   subscriptionPlan?: 'free' | 'premium' | 'pro';
 }
 
@@ -39,15 +40,23 @@ const userSchema: Schema<UserDocument> = new Schema<UserDocument>({
       twitter: String,
       facebook: String,
   },
+
   isVerified: {
       type: Boolean,
       default: false
   },
+  
+  isBlocked: {
+    type: Boolean,
+    default: false
+  },
+
   subscriptionPlan: {
       type: String,
       enum: ['free', 'premium', 'pro'],
       default: 'free'
   }
+
 }, { timestamps: true });
 
 export default model('users',userSchema);

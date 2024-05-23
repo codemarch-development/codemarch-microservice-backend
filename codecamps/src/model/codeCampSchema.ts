@@ -21,9 +21,6 @@ interface ILink extends Document {
   url: string;
 }
 
-interface ICodeBlock extends Document {
-  code: string;
-}
 
 interface ICodecampData extends Document {
   title: string;
@@ -51,7 +48,7 @@ interface ICodecamp extends Document {
   tags: string;
   reviews: IReview[];
   codecamp_data: ICodecampData[];
-  codecamp_type: string;
+  category: string;
   ratings?: number;
   purchased?: number;
   status?: string;
@@ -125,20 +122,25 @@ const codecampSchema = new Schema<ICodecamp>({
   }],
 
   reviews:[reviewSchema],
+
   codecamp_data:[codecampDataSchema],
+
   ratings:{
     type: Number,
     default: 0
   },
+
   purchased: {
     type: Number,
     default: 0
   },
-  codecamp_type: {
+
+  category: {
     type: String,
     enum: ['free', 'subscription', 'paid'],
     default: 'free' // You can set a default value if needed
   },
+  
   status: {
     type:String,
   }
