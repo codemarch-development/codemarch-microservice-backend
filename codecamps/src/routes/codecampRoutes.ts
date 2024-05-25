@@ -1,6 +1,6 @@
 import express from 'express';;
 import authenticateUser from '../middleware/authenticateUser';
-import { getTestConfirmation, createCodeCamp, deleteCodeCamps, getAllCodeCamps, getCodeCampById, updateCreation, uploadCodecampContent } from '../controller/codeCampController'
+import { getTestConfirmation, createCodeCamp, deleteCodeCamps, getAllCodeCamps, getCodeCampById, updateCreation, uploadCodecampContent, getCodecampContentByIds } from '../controller/codeCampController'
 import { userCodeCampEnrollment } from '../controller/userCodecampController';
 
 
@@ -37,7 +37,7 @@ router.delete('/:id', deleteCodeCamps);
 router.get('/:id', getCodeCampById);
 
 // Get a specific codecamp content by IDs
-// router.get('/:id/content/:contentId', getCodecampContentByIds);
+router.get('/:id/content/:contentId', getCodecampContentByIds);
 
 // Enroll a code camp by a user
 router.post('/enroll',authenticateUser,userCodeCampEnrollment);

@@ -5,7 +5,7 @@ import { Channel } from 'amqplib';
 import passport from './configs/passport';
 import databaseConnectionAsync from './configs/databaseConfiguration';
 import codeCampsRoutes from './routes/codecampRoutes';
-import { CreateChannel } from './utils/index'
+import { CreateChannel, RPCObserver } from './utils/index'
 import { config } from './configs/envConfiguration'
 import { NotFoundError } from './errors/not-found-error';
 import { errorHandler } from './middleware/error-handler';
@@ -63,6 +63,8 @@ app.all('*', (_req, _res, next) => {
 
 // Register the error handler middleware
 app.use(errorHandler);
+
+
 
 
 const start = async () => {

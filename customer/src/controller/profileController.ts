@@ -90,13 +90,21 @@ export const getUserCodecampById = async (req: Request, res: Response, next: Nex
         }
         
         const codecamp = await userCodecampsModel.findOne({ userId, codecampId });
-        console.log(codecamp,'user codecamp');
+        console.log(codecamp,'user codecampooooooo');
 
-        res.status(200).json({
-            status: true,
-            data: codecamp,
-            message: 'Success',
-        });
+        if (codecamp) {
+            res.status(200).json({
+                status: true,
+                data: codecamp,
+                message: 'Success',
+            });
+        }else {
+            res.status(200).json({
+                status: false,
+                data: null,
+                message: 'failure',
+            });
+        }
 
     } catch (error) {
         console.log(error);

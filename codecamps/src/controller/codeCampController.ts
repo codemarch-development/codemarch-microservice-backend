@@ -246,40 +246,45 @@ export const getAllCodeCamps = async (req: Request, res: Response, next: NextFun
 }
 
 
-// export const getCodecampContentByIds = async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         const codecampId = req.params.id;
-//         const contentId  = req.params.contentId;
-//         console.log(contentId,'contentId')
+export const getCodecampContentByIds = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const codecampId = req.params.id;
+        const contentId = req.params.contentId;
+        console.log(contentId, 'contentId')
 
-//         // Validation Checks
-//         if(!codecampId || !contentId) {
-//             throw next(new BadRequestError('Invalid Credentials'));
-//         }
-//         // Convert contentId to ObjectId
-//         const contentObjectId = new mongoose.Types.ObjectId(contentId);
+        // Validation Checks
+        if (!codecampId || !contentId) {
+            throw next(new BadRequestError('Invalid Credentials'));
+        }
+        // Convert contentId to ObjectId
+        const contentObjectId = new mongoose.Types.ObjectId(contentId);
 
-//         const codecamp = await CodeCamps.findById({ _id: codecampId });
-//         if (codecamp) {
-//             // Find the content by contentId
-//             const content = codecamp.codecamp_data.find(content => content._id.equals(contentObjectId));
-//             if (content !== undefined) {
+        const codecamp = await CodeCamps.findById({ _id: codecampId });
+        if (codecamp) {
+            // Find the content by contentId
+            const contentIndex = codecamp.codecamp_data.findIndex(content => content._id.equals(contentObjectId));
+            if (contentIndex !== -1) {
+                const content = codecamp.codecamp_data[contentIndex];
 
-//                 console.log(content, 'Found content');
-//                 res.status(200).json({ status: true, data: content });
+                res.status(200).json({
+                    status: true,
+                    data: content,
+                    prevContentId: contentIndex > 0 ? codecamp.codecamp_data[contentIndex - 1]._id : null,
+                    nextContentId: contentIndex < codecamp.codecamp_data.length - 1 ? codecamp.codecamp_data[contentIndex + 1]._id : null
+                });
 
-//             } else {
-//                 console.log('content not found',content)
-//                 throw next(new BadRequestError('Content not found'));
-//             }
-//         } else {
-//             throw next(new BadRequestError('Codecamp not found'));
-//         }
+            } else {
+                
+                throw next(new BadRequestError('Content not found'));
+            }
+        } else {
+            throw next(new BadRequestError('Codecamp not found'));
+        }
 
-//     } catch (error) {
-//         next(error);
-//     }
-// }
+    } catch (error) {
+        next(error);
+    }
+}
 
 
 
