@@ -22,7 +22,7 @@ declare global {
 const app = express();
 
 
-// Middleware configurations]
+// Middleware configurations
 
 app.use(session({
     secret: 'your-secret-key',

@@ -2,7 +2,6 @@ import { config } from '../configs/envConfiguration'
 import { genSalt , hash , compare } from 'bcryptjs';
 import jwt from 'jsonwebtoken';
 import { connect, Connection, Channel } from 'amqplib';
-import { serveRPCRequests } from '../controller/codeCampController';
 
 let amqplibConnection: Connection | null = null;
 
@@ -72,34 +71,5 @@ export const PublishMessage = async (channel:Channel, binding_key:string, messag
 }
 
 
-//RPC Observer 
-export const RPCObserver = async (RPC_QUEUE_NAME:string) => {
-    const channel = await getChannel();
-    await channel.assertQueue(RPC_QUEUE_NAME,{
-        durable: false,
-    });
-
-    channel.prefetch(1)
-    channel.consume(RPC_QUEUE_NAME, async (msg:any)=> {
-        if(msg.content) {
-            //DB operations
-            const payload = JSON.parse(msg.content.toString());
-            const response = serveRPCRequests(payload) //call DB operation
-
-            channel.sendToQueue(msg.properties.replyTo, Buffer.from(JSON.stringify(response)),
-                {
-                    correlationId: msg.properties.correlationId,
-                }
-            );
-
-            channel.ack(msg);
-        }
-    },
-
-    {
-        noAck: false,
-    })
-
-}
 
 

@@ -142,7 +142,7 @@ export const updateCreation = async (req: Request, res: Response, next: NextFunc
                 estimatedPrice: formData.estimated,
                 tags: formData.tags,
             })
-            res.status(200).json({ status: true, message: 'Course updated successfully' });
+            res.status(200).json({ status: true, message: 'codecamp updated successfully' });
         } else {
             await CodeCamps.findByIdAndUpdate(codecampId,{
                 title: formData.title,
