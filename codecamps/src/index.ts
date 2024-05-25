@@ -5,7 +5,7 @@ import { Channel } from 'amqplib';
 import passport from './configs/passport';
 import databaseConnectionAsync from './configs/databaseConfiguration';
 import codeCampsRoutes from './routes/codecampRoutes';
-import { CreateChannel, RPCObserver } from './utils/index'
+import { CreateChannel } from './utils/index'
 import { config } from './configs/envConfiguration'
 import { NotFoundError } from './errors/not-found-error';
 import { errorHandler } from './middleware/error-handler';
@@ -22,7 +22,7 @@ declare global {
 const app = express();
 
 
-// Middleware configurations]
+// Middleware configurations
 
 app.use(session({
     secret: 'your-secret-key',
@@ -33,6 +33,7 @@ app.use(cors())
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(passport.initialize());
+
 
 (async () => {
     try {
@@ -45,7 +46,6 @@ app.use(passport.initialize());
 
         // Start your server or other application logic here
     } catch (error) {
-        console.log('Error connecting to RabbitMQ:', error);
         throw error
     }
 })();
@@ -62,6 +62,8 @@ app.all('*', (_req, _res, next) => {
 
 // Register the error handler middleware
 app.use(errorHandler);
+
+
 
 
 const start = async () => {

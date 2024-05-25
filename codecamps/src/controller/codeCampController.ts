@@ -142,7 +142,7 @@ export const updateCreation = async (req: Request, res: Response, next: NextFunc
                 estimatedPrice: formData.estimated,
                 tags: formData.tags,
             })
-            res.status(200).json({ status: true, message: 'Course updated successfully' });
+            res.status(200).json({ status: true, message: 'codecamp updated successfully' });
         } else {
             await CodeCamps.findByIdAndUpdate(codecampId,{
                 title: formData.title,
@@ -160,38 +160,6 @@ export const updateCreation = async (req: Request, res: Response, next: NextFunc
         next(error);
     }
 }
-
-
-// export const updateCourseSyllabus = async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         const { formData } = req.body;
-//         const courseId = req.params.id;
-//         console.log(formData,'formData')
-//         console.log(courseId,'courseId');
-
-//         // Validation Checks
-//         if(!formData || !courseId) {
-//             throw next(new BadRequestError('Invalid Credentials'));
-//         }
-        
-//         // Find the course by ID
-//         const course = await CodeCamps.findById(courseId);
-//         if (!course) {
-//             throw next(new BadRequestError('Course not found'));
-//         }
-
-//         const syllabus = await CodeCamps.findByIdAndUpdate(courseId,{
-//             syllabusOverview:formData
-            
-//         })
-//         res.status(200).json({ status: true,data:syllabus, message: 'Course syllabus successfully' });
-
-//     } catch (error) {
-//         console.log(error);
-//         next(error);
-//     }
-// }
-
 
 
 export const deleteCodeCamps = async (req: Request, res: Response, next: NextFunction) => {
@@ -246,71 +214,52 @@ export const getAllCodeCamps = async (req: Request, res: Response, next: NextFun
 }
 
 
-// export const getCodecampContentByIds = async (req: Request, res: Response, next: NextFunction) => {
-//     try {
-//         const codecampId = req.params.id;
-//         const contentId  = req.params.contentId;
-//         console.log(contentId,'contentId')
+export const getCodecampContentByIds = async (req: Request, res: Response, next: NextFunction) => {
+    try {
+        const codecampId = req.params.id;
+        const contentId = req.params.contentId;
+        console.log(contentId, 'contentId')
 
-//         // Validation Checks
-//         if(!codecampId || !contentId) {
-//             throw next(new BadRequestError('Invalid Credentials'));
-//         }
-//         // Convert contentId to ObjectId
-//         const contentObjectId = new mongoose.Types.ObjectId(contentId);
+        // Validation Checks
+        if (!codecampId || !contentId) {
+            throw next(new BadRequestError('Invalid Credentials'));
+        }
+        // Convert contentId to ObjectId
+        const contentObjectId = new mongoose.Types.ObjectId(contentId);
 
-//         const codecamp = await CodeCamps.findById({ _id: codecampId });
-//         if (codecamp) {
-//             // Find the content by contentId
-//             const content = codecamp.codecamp_data.find(content => content._id.equals(contentObjectId));
-//             if (content !== undefined) {
+        const codecamp = await CodeCamps.findById({ _id: codecampId });
+        if (codecamp) {
+            // Find the content by contentId
+            const contentIndex = codecamp.codecamp_data.findIndex(content => content._id.equals(contentObjectId));
+            if (contentIndex !== -1) {
+                const content = codecamp.codecamp_data[contentIndex];
 
-//                 console.log(content, 'Found content');
-//                 res.status(200).json({ status: true, data: content });
+                res.status(200).json({
+                    status: true,
+                    data: content,
+                    prevContentId: contentIndex > 0 ? codecamp.codecamp_data[contentIndex - 1]._id : null,
+                    nextContentId: contentIndex < codecamp.codecamp_data.length - 1 ? codecamp.codecamp_data[contentIndex + 1]._id : null
+                });
 
-//             } else {
-//                 console.log('content not found',content)
-//                 throw next(new BadRequestError('Content not found'));
-//             }
-//         } else {
-//             throw next(new BadRequestError('Codecamp not found'));
-//         }
+            } else {
+                
+                throw next(new BadRequestError('Content not found'));
+            }
+        } else {
+            throw next(new BadRequestError('Codecamp not found'));
+        }
 
-//     } catch (error) {
-//         next(error);
-//     }
-// }
-
-
+    } catch (error) {
+        next(error);
+    }
+}
 
 export const getTestConfirmation = async (req: Request, res: Response, next: NextFunction) => {
     try {
         // Find all courses in the database
-        
         const codeCamps = await CodeCamps.find({});
         res.status(200).json({ status: true, data: codeCamps});
     } catch (error:any) {
         next(error);
     }
-}
-
-
-// Serve RPC requests
-export const serveRPCRequests = (payload:any) => {
-     
-    const { type, data, userId } = JSON.parse(payload) ;
-    console.log(event,'----')
-    try {
-        switch(type){
-            case 'CODECAMP_ENROLLED':
-                console.log('set ayeda mowne')
-                break;
-            default:
-                break;
-        }
-        
-    } catch (error) {
-        throw(error)
-    }
-
 }
