@@ -6,6 +6,7 @@ import passport from './configs/passport';
 import databaseConnectionAsync from './configs/databaseConfiguration';
 import codeCampsRoutes from './routes/codecampRoutes';
 import { CreateChannel, RPCObserver } from './utils/index'
+import { CreateChannel, RPCObserver } from './utils/index'
 import { config } from './configs/envConfiguration'
 import { NotFoundError } from './errors/not-found-error';
 import { errorHandler } from './middleware/error-handler';
@@ -38,6 +39,7 @@ app.use(passport.initialize());
 (async () => {
     try {
         const channel:Channel = await CreateChannel();
+        const channel:Channel = await CreateChannel();
         // Pass the channel to other parts of your application
         // For example, you can pass it to route handlers or services
         // You can also store it in a global variable or dependency injection container
@@ -46,6 +48,7 @@ app.use(passport.initialize());
 
         // Start your server or other application logic here
     } catch (error) {
+        console.log('Error connecting to RabbitMQ:', error);
         console.log('Error connecting to RabbitMQ:', error);
         throw error
     }

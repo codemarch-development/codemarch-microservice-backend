@@ -14,6 +14,7 @@ router.post('/start-creation', createCodeCamp);
 
 // Step 2: upload the CODECAMP content syllabus 
 // router.post('/upload-syllabus', uploadCodecampSyllabus);
+// router.post('/upload-syllabus', uploadCodecampSyllabus);
 
 // Step 3: Upload & Update the CODECAMP content syllabus 
 router.patch('/finalize-content',uploadCodecampContent);
@@ -25,6 +26,7 @@ router.patch('/update-creation/:id', updateCreation);
 
 // Step 2: Edit the CODECAMP content syllabus
 // router.patch('/update-syllabus/:id', updateCourseSyllabus);
+// router.patch('/update-syllabus/:id', updateCourseSyllabus);
 
 
 // Get all code camps
@@ -33,6 +35,7 @@ router.get('/', getAllCodeCamps);
 // Delete a code camp by ID
 router.delete('/:id', deleteCodeCamps);
 
+// Get a specific code camp by ID
 // Get a specific code camp by ID
 router.get('/:id', getCodeCampById);
 
